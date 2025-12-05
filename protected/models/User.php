@@ -15,6 +15,7 @@
  */
 class User extends CActiveRecord
 {
+	public $confirmPassword;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -33,6 +34,8 @@ class User extends CActiveRecord
 		return array(
 			array('username, password, email', 'required'),
 			array('username, password, email', 'length', 'max'=>128),
+			array('confirmPassword', 'required', 'on'=>'register'),
+			array('confirmPassword', 'compare', 'compareAttribute'=>'password', 'on'=>'register'),
 			array('profile', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -61,6 +64,7 @@ class User extends CActiveRecord
 			'id' => 'ID',
 			'username' => 'Username',
 			'password' => 'Password',
+			'confirmPassword' => 'Confirm Password',
 			'email' => 'Email',
 			'profile' => 'Profile',
 		);
@@ -115,4 +119,18 @@ class User extends CActiveRecord
     {
         return CPasswordHelper::hashPassword($password);
     }
+
+	public function beforeSave()
+	{
+		if(parent::beforeSave())
+		{
+			// Hash password before saving (only for new records or if password changed)
+			if($this->isNewRecord || !empty($this->password))
+			{
+				$this->password = $this->hashPassword($this->password);
+			}
+			return true;
+		}
+		return false;
+	}
 }

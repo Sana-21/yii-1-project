@@ -7,9 +7,9 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'name'=>'Blog Application',
 	'defaultController'=>'post',
-
+	// 'theme' => 'twitter_fluid',
 	// preloading 'log' component
 	'preload'=>array('log'),
 
